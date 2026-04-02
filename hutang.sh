@@ -12,17 +12,16 @@ DATABASE="catatan_hutang_april_2026.txt"
 
 tampilkan_header() {
     clear
-    echo -e "${MERAH}"
-    # Logo BAYAR HUTANG Tebal Warna Merah Cerah
+    echo -e ""
     echo "██████╗  █████╗ ██╗   ██╗ █████╗ ██████╗     ██╗  ██╗██╗   ██╗████████╗ █████╗ ███╗   ██╗ ██████╗ "
     echo "██╔══██╗██╔══██╗╚██╗ ██╔╝██╔══██╗██╔══██╗    ██║  ██║██║   ██║╚══██╔══╝██╔══██╗████╗  ██║██╔════╝ "
     echo "██████╔╝███████║ ╚████╔╝ ███████║██████╔╝    ███████║██║   ██║   ██║   ███████║██╔██╗ ██║██║  ███╗"
     echo "██╔══██╗██╔══██║  ╚██╔╝  ██╔══██║██╔══██╗    ██╔══██║██║   ██║   ██║   ██╔══██║██║╚██╗██║██║   ██║"
     echo "██████╔╝██║  ██║   ██║   ██║  ██║██║  ██║    ██║  ██║╚██████╔╝   ██║   ██║  ██║██║ ╚████║╚██████╔╝"
     echo "╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ "
-    echo -e "${NORMAL}"
+    echo -e ""
 
-    TEXT=">>>-{ where anonymous : by Laksamana dzu nur ain }-<<<"
+    TEXT=">>>-{ where anonymous : by LAKSAMANA DZU NUR AIN }-<<<"
     for (( i=0; i<${#TEXT}; i++ )); do echo -ne "${MERAH}${TEXT:$i:1}"; sleep 0.01; done
     echo -e "${NORMAL}\n"
 }
@@ -31,10 +30,15 @@ start_catat() {
     tampilkan_header
     echo -e "${CYAN}[ INPUT CATATAN HUTANG APRIL 2026 ]${NORMAL}"
     read -p "Masukkan angka tanggal (1-30): " tgl_pilih
-    if [[ "$tgl_pilih" -lt 1 || "$tgl_pilih" -gt 30 ]]; then echo -e "${MERAH}Salah!${NORMAL}"; sleep 1; return; fi
-
-    HARI_ENG=$(date -d "2026-04-$tgl_pilih" +"%A")
-    case $HARI_ENG in Monday) HARI="Senin" ;; Tuesday) HARI="Selasa" ;; Wednesday) HARI="Rabu" ;; Thursday) HARI="Kamis" ;; Friday) HARI="Jumat" ;; Saturday) HARI="Sabtu" ;; Sunday) HARI="Minggu" ;; esac
+    
+    # Perbaikan untuk Termux & Kali Linux agar deteksi hari akurat
+    HARI_ENG=$(date -d "2026-04-$tgl_pilih" +"%A" 2>/dev/null || date -f - +"%A" <<< "2026-04-$tgl_pilih")
+    
+    case $HARI_ENG in 
+        Monday) HARI="Senin" ;; Tuesday) HARI="Selasa" ;; Wednesday) HARI="Rabu" ;; 
+        Thursday) HARI="Kamis" ;; Friday) HARI="Jumat" ;; Saturday) HARI="Sabtu" ;; Sunday) HARI="Minggu" ;; 
+        *) HARI="Hari" ;;
+    esac
 
     echo -e "\n------------------------------------"
     echo -e "${MERAH}Hari $HARI tgl $tgl_pilih bulan 4 Tahun 2026${NORMAL}"
@@ -68,8 +72,8 @@ lihat_catatan() {
 
 while true; do
     tampilkan_header
-    echo -e "${MERAH}1.${NORMAL} Start Catat Kong (HUTANG)"
-    echo -e "${MERAH}2.${NORMAL} Lihat Catatan Kong"
+    echo -e "${MERAH}1.${NORMAL} Start Catat (HUTANG)"
+    echo -e "${MERAH}2.${NORMAL} Lihat Catatan"
     echo -e "${MERAH}3.${NORMAL} Exit"
     echo ""
     read -p "Pilih menu : " pilih
